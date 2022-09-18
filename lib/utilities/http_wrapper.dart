@@ -1,10 +1,15 @@
 import 'package:http/http.dart' as http;
+import 'package:motoon_api_example/models/http_error.dart';
 
 class HttpWrapper {
-  Future get(String url, {Map<String, String>? headers}) async {
+  Future<String> get(String url, {Map<String, String>? headers}) async {
     var uri = Uri.parse(url);
     var response = await http.get(uri, headers: headers);
-    return response.body;
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw HttpError(statusCode: response.statusCode, response: response.body);
+    }
   }
 
   Future post() async {}
